@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nancy.Owin;
+using System.Diagnostics;
+
 namespace ShoppingCart
 {
 
@@ -24,7 +26,18 @@ namespace ShoppingCart
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseOwin(buildFunc => buildFunc.UseNancy());
+            app.UseOwin(buildFunc =>
+            {
+                buildFunc(next => env =>
+                {
+                    System.Console.WriteLine("Got request");
+
+                    Debug.WriteLine("Got request");
+
+                    return next(env);
+                });
+                buildFunc.UseNancy();
+            });
         }
         
     }
